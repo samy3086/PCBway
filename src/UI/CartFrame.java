@@ -20,7 +20,7 @@ public class CartFrame extends JFrame {
 
     public CartFrame() {
         this.cartService = CartService.getInstance();
-        this.priceFormat = new DecimalFormat("$#,###");
+        this.priceFormat = new DecimalFormat("$#,##0.00");
 
         setTitle("Shopping Cart");
         setSize(1400, 900);
@@ -59,7 +59,7 @@ public class CartFrame extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(20, 0, 0, 20);
-        gbc.weightx = 0.6;
+        gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
         // Left column - Shopping cart items
@@ -70,7 +70,9 @@ public class CartFrame extends JFrame {
 
         // Right column - Card details panel
         gbc.gridx = 1;
-        gbc.weightx = 0.4;
+        gbc.weightx = 0.0;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
         gbc.insets = new Insets(20, 20, 0, 0);
         JPanel rightColumn = createCardDetailsPanel();
         centerPanel.add(rightColumn, gbc);
@@ -112,7 +114,7 @@ public class CartFrame extends JFrame {
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBackground(new Color(0, 153, 76));
         cardPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
-        cardPanel.setPreferredSize(new Dimension(400, 650));
+        cardPanel.setPreferredSize(new Dimension(350, 650));
 
         // Title
         JLabel title = new JLabel("Card Details");
@@ -347,7 +349,7 @@ public class CartFrame extends JFrame {
                 }
                 // Select this card
                 selectedCardLabel = label;
-                label.setBorder(BorderFactory.createLineBorder(new Color(0, 200, 100), 3));
+                label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
             }
         });
 
@@ -463,8 +465,11 @@ public class CartFrame extends JFrame {
 
         // Minus button
         JButton minusBtn = new JButton("-");
-        minusBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
-        minusBtn.setPreferredSize(new Dimension(25, 25));
+        minusBtn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        minusBtn.setPreferredSize(new Dimension(35, 35));
+        minusBtn.setMinimumSize(new Dimension(35, 35));
+        minusBtn.setMaximumSize(new Dimension(35, 35));
+        minusBtn.setMargin(new Insets(0, 0, 0, 0));
         minusBtn.setBackground(Color.BLACK);
         minusBtn.setForeground(Color.WHITE);
         minusBtn.setFocusPainted(false);
@@ -479,8 +484,11 @@ public class CartFrame extends JFrame {
 
         // Plus button
         JButton plusBtn = new JButton("+");
-        plusBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
-        plusBtn.setPreferredSize(new Dimension(25, 25));
+        plusBtn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        plusBtn.setPreferredSize(new Dimension(35, 35));
+        plusBtn.setMinimumSize(new Dimension(35, 35));
+        plusBtn.setMaximumSize(new Dimension(35, 35));
+        plusBtn.setMargin(new Insets(0, 0, 0, 0));
         plusBtn.setBackground(Color.BLACK);
         plusBtn.setForeground(Color.WHITE);
         plusBtn.setFocusPainted(false);
