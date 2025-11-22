@@ -436,14 +436,30 @@ public class CartFrame extends JFrame {
         // Try to load product image
         try {
             if (item.getProduct().getImagePath() != null && !item.getProduct().getImagePath().isEmpty()) {
-                ImageIcon icon = new ImageIcon(item.getProduct().getImagePath());
-                if (icon.getIconWidth() > 0) {
-                    Image img = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-                    imageLabel.setIcon(new ImageIcon(img));
-                    imageLabel.setOpaque(false);
+                // Use absolute path
+                String basePath = "c:\\Users\\kayou\\Downloads\\PCBway-master (1)\\PCBway-master\\";
+                String imagePath = item.getProduct().getImagePath();
+                String fullPath = imagePath;
+
+                // If path doesn't start with base path, add it
+                if (!imagePath.startsWith("c:") && !imagePath.startsWith("C:")) {
+                    fullPath = basePath + imagePath;
+                }
+
+                java.io.File imageFile = new java.io.File(fullPath);
+                if (imageFile.exists()) {
+                    ImageIcon icon = new ImageIcon(fullPath);
+                    if (icon.getIconWidth() > 0) {
+                        Image img = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+                        imageLabel.setIcon(new ImageIcon(img));
+                        imageLabel.setOpaque(false);
+                    }
+                } else {
+                    System.err.println("Product image not found: " + fullPath);
                 }
             }
         } catch (Exception ex) {
+            System.err.println("Error loading product image: " + ex.getMessage());
             // Keep default gray background
         }
 

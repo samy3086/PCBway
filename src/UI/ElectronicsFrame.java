@@ -1,4 +1,5 @@
 package UI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,12 +17,12 @@ public class ElectronicsFrame extends JFrame {
     private DecimalFormat priceFormat;
     private JPanel productsPanel;
     private JLabel cartCountLabel;
-    
+
     public ElectronicsFrame() {
         this.productService = ProductService.getInstance();
         this.cartService = CartService.getInstance();
         this.priceFormat = new DecimalFormat("$0.00");
-        
+
         setTitle("Electronics");
         setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,17 +33,17 @@ public class ElectronicsFrame extends JFrame {
 
         // Add navbar
         add(createNavBar(), BorderLayout.NORTH);
-        
+
         // Main content
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.WHITE);
-        
+
         JLabel title = new JLabel("Electronics Store", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 48));
         title.setForeground(new Color(0, 100, 0));
         title.setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
         contentPanel.add(title, BorderLayout.NORTH);
-        
+
         // Products grid
         createProductsGrid();
         JScrollPane scrollPane = new JScrollPane(productsPanel);
@@ -50,35 +51,34 @@ public class ElectronicsFrame extends JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(null);
-        
+
         contentPanel.add(scrollPane, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
-        
+
         updateCartDisplay();
     }
-    
+
     private void createProductsGrid() {
         productsPanel = new JPanel(new GridLayout(0, 3, 30, 30));
         productsPanel.setBackground(Color.WHITE);
         productsPanel.setBorder(BorderFactory.createEmptyBorder(20, 80, 80, 80));
-        
+
         List<Product> products = productService.getAllProducts();
-        
+
         for (Product product : products) {
             JPanel productCard = createProductCard(product);
             productsPanel.add(productCard);
         }
     }
-    
+
     private JPanel createProductCard(Product product) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(350, 400));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
-            new RoundedBorder(15, new Color(200, 200, 200), 1),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
-        
+                new RoundedBorder(15, new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+
         // Product image
         JLabel imageLabel = createImageLabel(product.getImagePath());
         imageLabel.setPreferredSize(new Dimension(320, 150));
@@ -86,18 +86,18 @@ public class ElectronicsFrame extends JFrame {
         imageLabel.setOpaque(true);
         imageLabel.setBorder(new RoundedBorder(10, new Color(220, 220, 220), 1));
         card.add(imageLabel, BorderLayout.NORTH);
-        
+
         // Product info
         JPanel infoPanel = new JPanel(new BorderLayout());
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
-        
+
         // Product name
         JLabel nameLabel = new JLabel("<html><div style='text-align: center;'>" + product.getName() + "</div></html>");
         nameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoPanel.add(nameLabel, BorderLayout.NORTH);
-        
+
         // Product description
         JTextArea descArea = new JTextArea(product.getDescription());
         descArea.setWrapStyleWord(true);
@@ -107,16 +107,16 @@ public class ElectronicsFrame extends JFrame {
         descArea.setBackground(Color.WHITE);
         descArea.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         infoPanel.add(descArea, BorderLayout.CENTER);
-        
+
         // Price and add to cart
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Color.WHITE);
-        
+
         JLabel priceLabel = new JLabel(priceFormat.format(product.getPrice()));
         priceLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         priceLabel.setForeground(new Color(0, 100, 0));
         priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        
+
         RoundedButton addToCartBtn = new RoundedButton("Add to Cart", 25);
         addToCartBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
         addToCartBtn.setBackground(new Color(200, 255, 200));
@@ -124,32 +124,32 @@ public class ElectronicsFrame extends JFrame {
         addToCartBtn.setHoverColor(new Color(180, 240, 180));
         addToCartBtn.setPreferredSize(new Dimension(100, 30));
         addToCartBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         addToCartBtn.addActionListener(e -> {
             cartService.addToCart(product, 1);
             updateCartDisplay();
-            JOptionPane.showMessageDialog(this, 
-                product.getName() + " added to cart!", 
-                "Added to Cart", 
-                JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    product.getName() + " added to cart!",
+                    "Added to Cart",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
-        
+
         bottomPanel.add(priceLabel, BorderLayout.WEST);
         bottomPanel.add(addToCartBtn, BorderLayout.EAST);
-        
+
         infoPanel.add(bottomPanel, BorderLayout.SOUTH);
         card.add(infoPanel, BorderLayout.CENTER);
-        
+
         return card;
     }
-    
+
     private void updateCartDisplay() {
         if (cartCountLabel != null) {
             int itemCount = cartService.getTotalItemCount();
             cartCountLabel.setText("🛒(" + itemCount + ")");
         }
     }
-    
+
     private JPanel createNavBar() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
@@ -163,7 +163,7 @@ public class ElectronicsFrame extends JFrame {
         for (String item : navItems) {
             JLabel link = new JLabel(item);
             link.setFont(new Font("SansSerif", Font.BOLD, 16));
-            
+
             // Highlight current page
             if (item.equals("ELECTRONICS")) {
                 link.setForeground(new Color(0, 100, 0));
@@ -186,7 +186,7 @@ public class ElectronicsFrame extends JFrame {
                         link.setForeground(new Color(34, 139, 34));
                     }
                 }
-                
+
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     navigateToPage(item);
@@ -215,7 +215,7 @@ public class ElectronicsFrame extends JFrame {
         searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
         searchField.setBorder(new RoundedBorder(20, new Color(34, 139, 34), 2));
         searchField.setPreferredSize(new Dimension(200, 35));
-        
+
         // Add search functionality
         searchField.addActionListener(e -> {
             String query = searchField.getText().trim();
@@ -229,19 +229,18 @@ public class ElectronicsFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int response = JOptionPane.showConfirmDialog(
-                    ElectronicsFrame.this,
-                    "Do you want to logout?",
-                    "Logout",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-                );
-                
+                        ElectronicsFrame.this,
+                        "Do you want to logout?",
+                        "Logout",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
                 if (response == JOptionPane.YES_OPTION) {
                     SignupFrame.getUserService().logout();
                     JOptionPane.showMessageDialog(ElectronicsFrame.this,
-                        "You have been logged out successfully.",
-                        "Logout",
-                        JOptionPane.INFORMATION_MESSAGE);
+                            "You have been logged out successfully.",
+                            "Logout",
+                            JOptionPane.INFORMATION_MESSAGE);
                     new LoginFrame().setVisible(true);
                     dispose();
                 }
@@ -257,12 +256,12 @@ public class ElectronicsFrame extends JFrame {
                 new CartFrame().setVisible(true);
                 dispose();
             }
-            
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 cartCountLabel.setForeground(new Color(0, 100, 0));
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 cartCountLabel.setForeground(Color.BLACK);
@@ -275,23 +274,23 @@ public class ElectronicsFrame extends JFrame {
 
         header.add(navPanel, BorderLayout.WEST);
         header.add(rightPanel, BorderLayout.EAST);
-        
+
         return header;
     }
-    
+
     private void searchProducts(String query) {
         productsPanel.removeAll();
         List<Product> filteredProducts = productService.searchProducts(query);
-        
+
         for (Product product : filteredProducts) {
             JPanel productCard = createProductCard(product);
             productsPanel.add(productCard);
         }
-        
+
         productsPanel.revalidate();
         productsPanel.repaint();
     }
-    
+
     private void navigateToPage(String pageName) {
         SwingUtilities.invokeLater(() -> {
             switch (pageName) {
@@ -315,31 +314,43 @@ public class ElectronicsFrame extends JFrame {
             }
         });
     }
-    
+
     private JLabel createImageLabel(String imagePath) {
         JLabel label = new JLabel("", SwingConstants.CENTER);
-        
+
         try {
-            // Try to load the image
-            ImageIcon icon = new ImageIcon(imagePath);
-            
-            // Check if image loaded successfully
-            if (icon.getIconWidth() > 0) {
-                // Scale the image to fit
-                Image img = icon.getImage();
-                Image scaledImg = img.getScaledInstance(300, 140, Image.SCALE_SMOOTH);
-                label.setIcon(new ImageIcon(scaledImg));
+            // Use absolute path
+            String basePath = "c:\\Users\\kayou\\Downloads\\PCBway-master (1)\\PCBway-master\\";
+            String fullPath = imagePath;
+
+            // If path doesn't start with base path, add it
+            if (!imagePath.startsWith("c:") && !imagePath.startsWith("C:")) {
+                fullPath = basePath + imagePath;
+            }
+
+            java.io.File imageFile = new java.io.File(fullPath);
+            if (imageFile.exists()) {
+                ImageIcon icon = new ImageIcon(fullPath);
+                if (icon.getIconWidth() > 0) {
+                    Image img = icon.getImage();
+                    Image scaledImg = img.getScaledInstance(300, 140, Image.SCALE_SMOOTH);
+                    label.setIcon(new ImageIcon(scaledImg));
+                } else {
+                    label.setText("📦");
+                    label.setFont(new Font("SansSerif", Font.PLAIN, 60));
+                }
             } else {
-                // Fallback to placeholder
+                System.err.println("Image not found: " + fullPath);
                 label.setText("📦");
                 label.setFont(new Font("SansSerif", Font.PLAIN, 60));
             }
         } catch (Exception e) {
-            // Fallback to placeholder
+            System.err.println("Error loading image: " + imagePath);
+            e.printStackTrace();
             label.setText("📦");
             label.setFont(new Font("SansSerif", Font.PLAIN, 60));
         }
-        
+
         return label;
     }
 
